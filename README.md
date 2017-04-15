@@ -241,6 +241,6 @@ I do not want to say that this functional approach is the best thing you could e
 use. At [Loopline Systems](http://www.loopline-systems.com) we used it by now
 and we will use it for our upcoming Go applications.
 
-That is it so far. I hope I could help you. If you complain about something or
+That is it so far. I hope I could help you. If you want to complain about something or
 have something to add just let me know :-)
 
