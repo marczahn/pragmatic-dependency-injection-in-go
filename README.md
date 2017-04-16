@@ -26,12 +26,21 @@ First something that has a dependency to something else.
 ~~~Go
 package samplePackage
 
+type AnInterface interface {
+    doSth()
+}
+
 type SampleService struct {
-    Dep *SampleDependency
+    Dep AnInterface
 }
 
 type SampleDependency struct {
     //...
+}
+
+func (dep *SampleDependency) doSth() {
+    // Fullfills AnInterface
+    // ...
 }
 ~~~
 
@@ -41,10 +50,10 @@ and one function and one variable per dependency
 ~~~Go
 package di
 
-var sampleDependency *samplePackage.SampleDependency
+var sampleDependency samplePackage.AnInterface
 var sampleService *samplePackage.SampleService
 
-func SampleDependency() *samplePackage.SampleDependency {
+func SampleDependency() samplePackage.AnInterface {
     if sampleDepdendency != nil {
         return sampleDepdendency
     }
@@ -101,30 +110,30 @@ Let's have a look at our SampleService from the example above:
 package samplePackage
 
 type SampleService struct {
-    Dep SampleDependency
+    Dep AnInterface
 }
 ~~~
 As you can see "Dep" is public. But for some good reasons we should have it private. 
-How can I achive this with this DI approach? Nothing simpler then this: Let's create
+How can we achive this with our DI approach? Nothing simpler then this: Let's create
 a constructor first:
 ~~~Go
 package samplePackage
 
-func NewSampleService(dep *SampleDependency) *SampleService {
+func NewSampleService(dep AnInterface) *SampleService {
     return &SampleService{
         dep: dep,
     }
 }
 
 type SampleService struct {
-    dep SampleDependency
+    dep AnInterface
 }
 ~~~
 And suddenly our dependency is private - Awesome :-) And the di package:
 ~~~Go
 package di
 
-func SampleDependency() *samplePackage.SampleDependency {
+func SampleDependency() samplePackage.AnInterface {
     // ...
 }
 
@@ -135,7 +144,7 @@ func SampleService() *samplePackage.SampleService {
 }
 ~~~
 
-And how can we use this now? Let's assume we have a simple [Cobra](https://github.com/spf13/cobra) application:
+And how can we use this now? Here a real-world example using [Cobra](https://github.com/spf13/cobra):
 
 ~~~Go
 package cmd
@@ -178,7 +187,7 @@ func init() {
     RootCmd.AddCommand(CmdAddUser(di.UserMgmt()))
 }
 ~~~
-As you can see we have the absolute minimum of code within the di package. 
+As you can see we have the absolute minimum of code within the di package (the UserMgmt method). 
 The rest is all here and therefore easily testable.
 
 At the end: It is 
@@ -189,7 +198,8 @@ Neither any magic nor super sophisticated architecture necessary :-)
 ## Advantages over other approaches
 
 What are the alternatives?
-1. No dependency at all - Almost untestable and full of implicit dependencies
+1. No DI at all - Quick and eezy peezy at the beginning but leading to dead end - 
+Almost untestable and full of implicit dependencies
 2. DI containers
 
 There are some libraries around, e. g.
@@ -197,10 +207,8 @@ There are some libraries around, e. g.
 * [Go-IOC](https://github.com/shelakel/go-ioc)
 * ...
 
-The downside I see here is that they are working with type assertions. And when you
-have a look at the usage you can see that you save not that many lines of code.
-
-And: It is like working against the static typing of Go - Of course not completely
+The upside: It looks all so nice'ish and encapsulated but at the end you harly save lines of code
+and it is full of type assertion magic. It is like working against the static typing of Go - Of course not completely
 but I think you know what I mean.
 
 3. Another approach is described here: https://www.youtube.com/watch?v=xlU_IhCBT84
@@ -216,7 +224,7 @@ func DoSth() {
     NewDependency().DoSthElse()
 }
 ~~~
-Fine so far but what about testing DoSth? First: You need to know about the internal
+So far so good. But what about testing DoSth? First: You need to know about the internal
 structure of DoSth (evil implicit dependencies). Second: You need to mock NewDependency.
 This could happen like this (We do not care about the packages now):
 ~~~Go
@@ -237,10 +245,13 @@ Can you see the problem? There are no parallel executed tests possible anymore.
 
 ## The End
 
-I do not want to say that this functional approach is the best thing you could ever
-use. At [Loopline Systems](http://www.loopline-systems.com) we used it by now
+I do not want to say that our approach is the best thing you could ever
+use. There is a little repeating boilerplate code but from my point of view
+the upsides are worth it. 
+
+At [Loopline Systems](http://www.loopline-systems.com) we used it by now
 and we will use it for our upcoming Go applications.
 
-That is it so far. I hope I could help you. If you want to complain about something or
+That is it so far. I hope this tutorial could help you. If you want to complain about something or
 have something to add just let me know :-)
 
