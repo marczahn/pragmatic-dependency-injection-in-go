@@ -8,7 +8,7 @@
 ## What it is about
 
 Welcome to this... well - call it tutorial. So what do we want to achive? 
-We want [Dependency Injection](https://de.wikipedia.org/wiki/Dependency_Injection). 
+We want to manage our in-project [dependency injections](https://de.wikipedia.org/wiki/Dependency_Injection) easily. 
 
 What else?
 
@@ -99,7 +99,7 @@ func AService(newInstance bool) {
     // ...
 }
 ~~~
-Isn't this simple? You are absolutely free to handle your dependencies.
+Isn't this simple? You are absolutely free to handle your dependency creation.
 
 One more thing: I am coming from the PHP corner and since meanwhile it is mostly used
 oop style I love encapsulation.
