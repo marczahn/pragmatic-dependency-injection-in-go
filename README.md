@@ -1,4 +1,4 @@
-# Pragmatic And Simple ID In Golang
+# Pragmatic And Simple ID In Golang (updated)
 
 ## Table Of Contents
 
@@ -99,7 +99,29 @@ func AService(newInstance bool) {
     // ...
 }
 ~~~
-Isn't this simple? You are absolutely free to handle your dependencies.
+Isn't this simple? You are absolutely free to handle your dependencies. There is just one problem I met: 
+What if the method is called twice at the same time? You will get two different instances of aService.
+ 
+ So we add a mutex to aService and lock it on access (Do not be afraid - This is the last step):
+ ~~~Go
+ package di
+ 
+ var aService struct {
+    sync.Mutex
+    instance *samplePackage.AService
+ }
+ 
+ func AService(newInstance bool) {
+     aService.Lock()
+     defer aService.Unlock()
+     if aService.instance != nil && !newInstance {
+         return aService.instance
+     }
+     
+     // ...
+ }
+ ~~~
+ Problem solved! One could maybe wrap this again but come on...
 
 One more thing: I am coming from the PHP corner and since meanwhile it is mostly used
 oop style I love encapsulation.
