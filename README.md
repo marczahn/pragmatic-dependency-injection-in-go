@@ -229,7 +229,7 @@ There are some libraries around, e. g.
 * [Go-IOC](https://github.com/shelakel/go-ioc)
 * ...
 
-The upside: It looks all so nice'ish and encapsulated but at the end you harly save lines of code
+The upside: It looks all so nice'ish and encapsulated but at the end you hardly save lines of code
 and it is full of type assertion magic. It is like working against the static typing of Go - Of course not completely
 but I think you know what I mean.
 
