@@ -1,4 +1,4 @@
-# Pragmatic And Simple ID In Golang (updated)
+# Pragmatic And Simple DI container In Golang (updated)
 
 ## Table Of Contents
 
